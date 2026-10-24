@@ -1,0 +1,22 @@
+body {
+    background: #f4f7fb;
+}
+
+.card {
+    border-radius: 14px;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+pre {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+}
+
+input, textarea, select {
+    border-radius: 10px !important;
+}

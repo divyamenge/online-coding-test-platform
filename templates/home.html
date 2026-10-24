@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center min-vh-75">
+    <div class="col-lg-6">
+        <h1 class="display-5 fw-bold">Online Coding Test Platform</h1>
+        <p class="lead">Create, manage and attend Python tests with MCQ and coding sections in a secure and timed environment.</p>
+        <div class="d-flex gap-3 mt-4">
+            <a href="{% url 'register' %}" class="btn btn-success btn-lg">Register as Student</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Admin / Student Login</a>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h3 class="card-title">Platform Highlights</h3>
+                <ul class="list-group list-group-flush mt-3">
+                    <li class="list-group-item">Admin dashboard for test creation and maintenance</li>
+                    <li class="list-group-item">Timed student exams with MCQ and coding challenges</li>
+                    <li class="list-group-item">Leaderboard with top 10 performers</li>
+                    <li class="list-group-item">Secure evaluation design avoiding direct execution of submitted Python on the server</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

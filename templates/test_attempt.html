@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ test.title }}</h2>
+<p class="text-muted">{{ test.description }}</p>
+<div class="alert alert-warning d-flex justify-content-between align-items-center">
+    <span><strong>Duration:</strong> {{ test.duration_minutes }} minutes</span>
+    <span id="timer" class="fw-bold">{{ remaining_seconds }}s</span>
+</div>
+
+<form method="post" action="{% url 'submit_test' test.id %}">
+    {% csrf_token %}
+    {% for question in questions %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>{{ forloop.counter }}. {{ question.question_text }}</h5>
+            {% if question.question_type == 'mcq' %}
+                {% for option in question.options.all %}
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ option.id }}" id="q{{ question.id }}o{{ forloop.counter }}">
+                    <label class="form-check-label" for="q{{ question.id }}o{{ forloop.counter }}">{{ option.option_text }}</label>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="mb-2"><strong>Sample Input:</strong> <pre>{{ question.sample_input|default:'N/A' }}</pre></div>
+                <div class="mb-2"><strong>Expected Output:</strong> <pre>{{ question.sample_output|default:'N/A' }}</pre></div>
+                <textarea class="form-control" name="coding_{{ question.id }}" rows="6" placeholder="Write your solution here..."></textarea>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success btn-lg">Submit Test</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const timerElement = document.getElementById('timer');
+let remaining = {{ remaining_seconds }};
+const countdown = setInterval(() => {
+    if (remaining <= 0) {
+        clearInterval(countdown);
+        document.querySelector('form').submit();
+        return;
+    }
+    remaining -= 1;
+    timerElement.textContent = remaining + 's';
+}, 1000);
+</script>
+{% endblock %}

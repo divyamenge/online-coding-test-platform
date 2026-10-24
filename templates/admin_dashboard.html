@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Admin Dashboard</h2>
+    <a href="{% url 'test_create' %}" class="btn btn-primary">Create New Test</a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-primary shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1">Total Tests</p>
+                <h3>{{ tests|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-success shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1">Attempts</p>
+                <h3>{{ attempts|length }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4>Tests</h4>
+        {% if tests %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Test</th>
+                    <th>Duration</th>
+                    <th>Total Marks</th>
+                    <th>Questions</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for test in tests %}
+                <tr>
+                    <td>{{ test.title }}</td>
+                    <td>{{ test.duration_minutes }} mins</td>
+                    <td>{{ test.total_marks }}</td>
+                    <td>{{ test.questions.count }}</td>
+                    <td>
+                        <a href="{% url 'test_edit' test.id %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'question_create' test.id %}" class="btn btn-sm btn-info">Add Question</a>
+                        <a href="{% url 'test_delete' test.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No tests created yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4>Student Results</h4>
+        {% if attempts %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Test</th>
+                    <th>Score</th>
+                    <th>Submitted</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr>
+                    <td>{{ attempt.student.full_name }}</td>
+                    <td>{{ attempt.test.title }}</td>
+                    <td>{{ attempt.score }}</td>
+                    <td>{{ attempt.submitted_at|date:'M d, Y H:i' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No attempts recorded yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

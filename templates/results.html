@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2>Test Result</h2>
+        <p><strong>Student:</strong> {{ attempt.student.full_name }}</p>
+        <p><strong>Test:</strong> {{ attempt.test.title }}</p>
+        <p><strong>Score:</strong> {{ attempt.score }} / {{ attempt.test.total_marks }}</p>
+        <p><strong>Submitted At:</strong> {{ attempt.submitted_at|date:'M d, Y H:i' }}</p>
+
+        <hr>
+        {% for submission in submissions %}
+            <div class="mb-4 border rounded p-3">
+                <h5>{{ forloop.counter }}. {{ submission.question.question_text }}</h5>
+                {% if submission.question.question_type == 'mcq' %}
+                    <p><strong>Your Answer:</strong> {{ submission.selected_option.option_text|default:'No option selected' }}</p>
+                    {% if submission.question.get_correct_option %}
+                        <p><strong>Correct Answer:</strong> {{ submission.question.get_correct_option.option_text }}</p>
+                    {% endif %}
+                {% else %}
+                    <p><strong>Your Answer:</strong></p>
+                    <pre>{{ submission.submitted_answer|default:'No answer submitted' }}</pre>
+                    <p><strong>Expected Output:</strong></p>
+                    <pre>{{ submission.question.expected_output|default:'No expected output provided' }}</pre>
+                {% endif %}
+                <p><strong>Result:</strong> {% if submission.is_correct %}<span class="text-success">Correct</span>{% else %}<span class="text-danger">Incorrect</span>{% endif %}</p>
+            </div>
+        {% endfor %}
+
+        <a href="{% url 'student_dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

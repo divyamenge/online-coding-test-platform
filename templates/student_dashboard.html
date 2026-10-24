@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Student Dashboard</h2>
+    <a href="{% url 'leaderboard' %}" class="btn btn-outline-primary">View Leaderboard</a>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4>Welcome, {{ student.full_name }}</h4>
+        <p class="text-muted mb-0">Roll: {{ student.roll_number|default:'N/A' }}</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for test in tests %}
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h5>{{ test.title }}</h5>
+                <p>{{ test.description|default:'No description provided.' }}</p>
+                <ul class="list-unstyled small">
+                    <li><strong>Duration:</strong> {{ test.duration_minutes }} minutes</li>
+                    <li><strong>Total marks:</strong> {{ test.total_marks }}</li>
+                    <li><strong>Questions:</strong> {{ test.questions.count }}</li>
+                </ul>
+                <a href="{% url 'student_test_view' test.id %}" class="btn btn-primary">Attempt Test</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="alert alert-info">No active tests available right now.</div></div>
+    {% endfor %}
+</div>
+
+<hr class="my-4">
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4>My Attempts</h4>
+        {% if attempts %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Test</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr>
+                    <td>{{ attempt.test.title }}</td>
+                    <td>{{ attempt.score }}</td>
+                    <td>{% if attempt.is_submitted %}Submitted{% else %}In Progress{% endif %}</td>
+                    <td>{{ attempt.submitted_at|date:'M d, Y H:i'|default:'-' }}</td>
+                    <td>
+                        {% if attempt.is_submitted %}
+                        <a href="{% url 'results_view' attempt.id %}" class="btn btn-sm btn-success">View Result</a>
+                        {% else %}
+                        <a href="{% url 'student_test_view' attempt.test.id %}" class="btn btn-sm btn-warning">Continue</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No attempts yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
