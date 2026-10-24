@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="mb-4">Add Question to {{ test.title }}</h2>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Question Type</label>
+                        {{ qtype_form.question_type }}
+                    </div>
+                </form>
+
+                <hr>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="question_type" value="mcq">
+                    {{ mcq_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Save MCQ</button>
+                </form>
+
+                <hr>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="question_type" value="coding">
+                    {{ coding_form.as_p }}
+                    <button type="submit" class="btn btn-success">Save Coding Question</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
